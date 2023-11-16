@@ -1,4 +1,4 @@
-interface Todo {
-  id: number,
-  description: string,
+export interface Todo {
+  id: number
+  description: string
 }

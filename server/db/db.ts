@@ -1,7 +1,21 @@
 import connection from './connection'
+import { ToDoData } from '../../models/todoData'
 
 const getTodos = () => {
-  return connection('todos').select('*')
+  return connection('todos').select(['id', 'description'])
 }
 
-export { getTodos }
+const addTodos = async (todo: ToDoData) => {
+  const [todos] = await connection('todos').insert(todo).returning('*')
+  return todos
+}
+
+const updateTodo = (id: number, description: string) => {
+  return connection('todos').where('id', id).update(description)
+}
+
+const deleteTodos = (id: number) => {
+  return connection('todos').del().where('id', id)
+}
+
+export { getTodos, addTodos, updateTodo, deleteTodos }

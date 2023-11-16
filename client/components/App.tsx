@@ -1,33 +1,93 @@
-import { useState } from 'react'
+import { useState, ChangeEvent, FormEvent } from 'react'
 import { getTodos } from '../apis/index'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { ToDoData } from '../../models/todoData'
+import { addTodos } from '../apis/index'
+
+const initialForm = {
+  description: '',
+}
 
 function App() {
   // const [todos, setTodos] = useState()
-  getTodos()
-    .then((data) => console.log(data))
-    .catch((err) => console.log(err))
+  const [showForm, setShowForm] = useState<number | null>(null)
+  const [form, setForm] = useState(initialForm)
 
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ['placeholder'],
+  const queryClient = useQueryClient()
+
+  function handleChange(event: ChangeEvent<HTMLInputElement>) {
+    const { name, value } = event.target
+    const newForm = { ...form, [name]: value }
+    setForm(newForm)
+  }
+
+  const {
+    data: todos,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ['todos'],
     queryFn: getTodos,
   })
-  // if (isError) {
-  //   return <div>There was an error while getting your todos</div>
-  // }
-  // if (!todosList || isLoading) {
-  //   return <div>Loading your games...</div>
-  // }
+ 
+
+  const addTodoMutation = useMutation({
+    mutationFn: addTodos,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['todos'] })
+    },
+  })
+  if (isError) {
+    return <p>There was an error while getting your todos</p>
+  }
+  if (isLoading) {
+    return <p>Loading your todos...</p>
+  }
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    addTodoMutation.mutate(form)
+  }
+
+  function handleEdit(id:number) {
+    setShowForm(id)
+  }
   return (
     <>
       <header className="header">
-        <h1>My Collection</h1>
+        <h1>MyTodo List</h1>
       </header>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          name="description"
+          onChange={handleChange}
+          value={form.description}
+        ></input>
+        <button>Add Todos</button>
+      </form>
       <section className="main">
-        {isLoading && <h1>Loading..</h1>}
-        {isError && <h1>Error..</h1>}
-        {data &&
-          data.map((todo: Todo) => <div key={todo.id}>{todo.description}</div>)}
+        {/* {isLoading && <h1>Loading..</h1>}
+        {isError && <h1>Error..</h1>} */}
+        {todos &&
+          todos.map((todo: ToDoData, index) => (
+            <div key={index}>
+              <li key={todo.id}>{todo.description}</li>
+              <button onClick={() => handleEdit(index)}>Edit</button>
+              {showForm === index && (
+                <form onSubmit={handleSubmit}>
+                  <input
+                    type="text"
+                    name="description"
+                    value={form.description}
+                    onChange={handleChange}
+                  ></input>
+                  <button>Save</button>
+                </form>
+              )}
+              <button>Delete</button>
+            </div>
+          ))}
       </section>
     </>
   )

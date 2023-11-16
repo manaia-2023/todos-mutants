@@ -1,5 +1,6 @@
 import request from 'superagent'
 import { Todo } from '../../server/models/db.ts'
+import { ToDoData } from '../../models/todoData'
 // const SSURL = 'http://localhost:3000'
 
 // THIS ENDPOINT WILL CHANGE ONCE TAYNE AND BONNIE FINISH SERVERSIDE ROUTING
@@ -9,6 +10,14 @@ export async function getTodos(): Promise<Todo[]> {
   console.log(data)
   return data.body
 }
+
+export async function addTodos(newTodo: string){
+  const response = await request.post('/api/v1/todos').send({ newTodo })
+  console.log(response.body)
+  return response.body
+}
+
+
 
 // const serverUrl = '/api/v1/todos'
 

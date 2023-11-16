@@ -4,17 +4,19 @@ import { useQuery } from '@tanstack/react-query'
 
 function App() {
   // const [todos, setTodos] = useState()
-  getTodos()
-    .then((data) => console.log(data))
-    .catch((err) => console.log(err))
+  // getTodos()
+  // .then((data) => console.log(data))
+  // .catch((err) => console.log(err))
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['placeholder'],
     queryFn: getTodos,
   })
-  // if (isError) {
-  //   return <div>There was an error while getting your todos</div>
-  // }
+
+  /*  if (isError) {
+    console.log(error.message)
+    return <div>There was an error while getting your todos</div>
+  } */
   // if (!todosList || isLoading) {
   //   return <div>Loading your games...</div>
   // }

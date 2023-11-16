@@ -5,6 +5,8 @@ import { getTodos } from '../db/db'
 router.get('/', async (req, res) => {
   try {
     const todos = await getTodos()
+    console.log(todos)
+
     res.json(todos)
     res.status(200)
   } catch (e) {

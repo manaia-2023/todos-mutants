@@ -32,7 +32,7 @@ router.patch('/:id', async (req, res) => {
     const id = Number(req.params.id)
     const description = req.body.description
     const todos = await updateTodo(id, description)
-    res.json(await todos)
+    res.json(todos)
     res.status(200)
   } catch (e) {
     res.status(500).send('Could not get todos')

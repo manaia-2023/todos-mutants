@@ -7,7 +7,9 @@ import { ToDoData } from '../../models/todoData'
 export async function getTodos(): Promise<Todo[]> {
   // const data = await request.get(SSURL + '/api/v1/todos')
   const data = await request.get('/api/v1/todos')
+
   // console.log(data)
+
   return data.body
 }
 

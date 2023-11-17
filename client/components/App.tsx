@@ -13,10 +13,12 @@ const initialForm = {
 
 function App() {
   // const [todos, setTodos] = useState()
+
   const [showForm, setShowForm] = useState<number | null>(null)
   const [form, setForm] = useState<ToDoData>(initialForm)
 
   const queryClient = useQueryClient()
+
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.target
@@ -32,6 +34,7 @@ function App() {
     queryKey: ['todos'],
     queryFn: getTodos,
   })
+
 
   const addTodoMutation = useMutation({
     mutationFn: addTodos,

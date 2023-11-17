@@ -2,16 +2,19 @@ import { useState, ChangeEvent, FormEvent } from 'react'
 import { getTodos } from '../apis/index'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { ToDoData } from '../../models/todoData'
-import { addTodos } from '../apis/index'
+import { addTodos, deleteTodo, editTodos } from '../apis/index'
 
 const initialForm = {
   description: '',
 }
+// interface Props{
+
+// }
 
 function App() {
   // const [todos, setTodos] = useState()
   const [showForm, setShowForm] = useState<number | null>(null)
-  const [form, setForm] = useState(initialForm)
+  const [form, setForm] = useState<ToDoData>(initialForm)
 
   const queryClient = useQueryClient()
 
@@ -29,7 +32,6 @@ function App() {
     queryKey: ['todos'],
     queryFn: getTodos,
   })
- 
 
   const addTodoMutation = useMutation({
     mutationFn: addTodos,
@@ -37,6 +39,21 @@ function App() {
       queryClient.invalidateQueries({ queryKey: ['todos'] })
     },
   })
+
+  const eidtToDoMutation = useMutation({
+    mutationFn: () => editTodos({ id, newTodo:form }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['todos'] })
+    },
+  })
+
+  const deleteTodoMutation = useMutation({
+    mutationFn: () => deleteTodo({id}),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['todos'] })
+    },
+  })
+
   if (isError) {
     return <p>There was an error while getting your todos</p>
   }
@@ -49,9 +66,19 @@ function App() {
     addTodoMutation.mutate(form)
   }
 
-  function handleEdit(id:number) {
+  function handleEditSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    eidtToDoMutation.mutate()
+  }
+  function handleDeleteSubmit(event: FormEvent<HTMLFormElement>,id) {
+    event.preventDefault()
+    deleteTodoMutation.mutate(id)
+  }
+
+  function handleEdit(id: number) {
     setShowForm(id)
   }
+
   return (
     <>
       <header className="header">
@@ -67,15 +94,13 @@ function App() {
         <button>Add Todos</button>
       </form>
       <section className="main">
-        {/* {isLoading && <h1>Loading..</h1>}
-        {isError && <h1>Error..</h1>} */}
         {todos &&
           todos.map((todo: ToDoData, index) => (
             <div key={index}>
-              <li key={todo.id}>{todo.description}</li>
+              <li key={index}>{todo.description}</li>
               <button onClick={() => handleEdit(index)}>Edit</button>
               {showForm === index && (
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleEditSubmit}>
                   <input
                     type="text"
                     name="description"
@@ -85,7 +110,7 @@ function App() {
                   <button>Save</button>
                 </form>
               )}
-              <button>Delete</button>
+              <button onClick={(id)=>handleDeleteSubmit(id)}>Delete</button>
             </div>
           ))}
       </section>

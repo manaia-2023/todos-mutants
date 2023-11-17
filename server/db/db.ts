@@ -7,6 +7,7 @@ const getTodos = () => {
 
 const addTodos = async (todo: ToDoData) => {
   const [todos] = await connection('todos').insert(todo).returning('*')
+  console.log(todos)
   return todos
 }
 

@@ -1,6 +1,7 @@
 import express from 'express'
 const router = express.Router()
 import { addTodos, getTodos, updateTodo, deleteTodos } from '../db/db'
+import { ToDoData } from '../../models/todoData'
 
 router.get('/', async (req, res) => {
   try {
@@ -14,9 +15,10 @@ router.get('/', async (req, res) => {
   }
 })
 
-router.post('/new', async (req, res) => {
+router.post('/', async (req, res) => {
   try {
-    const { todo } = req.body
+    const todo = req.body as ToDoData
+
     const todos = await addTodos(todo)
     res.json(todos)
     res.status(200)
@@ -25,7 +27,7 @@ router.post('/new', async (req, res) => {
   }
 })
 
-router.patch('update/:id', async (req, res) => {
+router.patch('/:id', async (req, res) => {
   try {
     const id = Number(req.params.id)
     const description = req.body.description
@@ -37,7 +39,7 @@ router.patch('update/:id', async (req, res) => {
   }
 })
 
-router.delete('delete/:id', async (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
     const id = Number(req.params.id)
     const todos = await deleteTodos(id)

@@ -28,6 +28,8 @@ export async function editTodos({
   id,
   newDescription,
 }: EditDescription): Promise<void>{
+  console.log(id, newDescription);
+  
  await request.patch(`/api/v1/todos/${id}`).send({description: newDescription})
 }
 
@@ -35,8 +37,12 @@ interface DeleteTodo{
   id: Todo['id']
 }
 
-export async function deleteTodo({id}: DeleteTodo): Promise<void>{
+export async function deleteTodo(id: string){
+  console.log(id);
+  
   await request.delete(`/api/v1/todos/${id}`)
+  console.log({id});
+  
 }
 
 

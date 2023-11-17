@@ -12,7 +12,7 @@ const addTodos = async (todo: ToDoData) => {
 }
 
 const updateTodo = (id: number, description: string) => {
-  return connection('todos').where('id', id).update(description)
+  return connection('todos').where({id: id}).update({description})
 }
 
 const deleteTodos = (id: number) => {

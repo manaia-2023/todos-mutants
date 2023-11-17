@@ -44,14 +44,14 @@ function App() {
   })
 
   const eidtToDoMutation = useMutation({
-    mutationFn: () => editTodos({ id, newTodo:form }),
+    mutationFn: editTodos,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['todos'] })
     },
   })
 
   const deleteTodoMutation = useMutation({
-    mutationFn: () => deleteTodo({id}),
+    mutationFn: deleteTodo,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['todos'] })
     },
@@ -69,12 +69,18 @@ function App() {
     addTodoMutation.mutate(form)
   }
 
-  function handleEditSubmit(event: FormEvent<HTMLFormElement>) {
+  function handleEditSubmit(event, id:number) {
     event.preventDefault()
-    eidtToDoMutation.mutate()
+    const data = {
+      id: id,
+      newDescription: form.description,
+    }
+    eidtToDoMutation.mutate(data)
   }
-  function handleDeleteSubmit(event: FormEvent<HTMLFormElement>,id) {
-    event.preventDefault()
+  function handleDeleteSubmit(id:string) {
+    // event.preventDefault()
+    // console.log(id);
+    
     deleteTodoMutation.mutate(id)
   }
 
@@ -102,8 +108,9 @@ function App() {
             <div key={index}>
               <li key={index}>{todo.description}</li>
               <button onClick={() => handleEdit(index)}>Edit</button>
+              {/* open the form */}
               {showForm === index && (
-                <form onSubmit={handleEditSubmit}>
+                <form onSubmit={(e) => handleEditSubmit(e, todo.id)}>
                   <input
                     type="text"
                     name="description"
@@ -113,7 +120,9 @@ function App() {
                   <button>Save</button>
                 </form>
               )}
-              <button onClick={(id)=>handleDeleteSubmit(id)}>Delete</button>
+              <button onClick={()=>{
+                handleDeleteSubmit(todo.id)
+              }}>Delete</button>
             </div>
           ))}
       </section>

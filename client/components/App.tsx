@@ -19,7 +19,6 @@ function App() {
 
   const queryClient = useQueryClient()
 
-
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.target
     const newForm = { ...form, [name]: value }
@@ -34,7 +33,6 @@ function App() {
     queryKey: ['todos'],
     queryFn: getTodos,
   })
-
 
   const addTodoMutation = useMutation({
     mutationFn: addTodos,
@@ -69,18 +67,19 @@ function App() {
     addTodoMutation.mutate(form)
   }
 
-  function handleEditSubmit(event, id:number) {
+  function handleEditSubmit(event, id: number) {
     event.preventDefault()
     const data = {
       id: id,
       newDescription: form.description,
     }
     eidtToDoMutation.mutate(data)
+    setShowForm(-1)
   }
-  function handleDeleteSubmit(id:string) {
+  function handleDeleteSubmit(id: string) {
     // event.preventDefault()
     // console.log(id);
-    
+
     deleteTodoMutation.mutate(id)
   }
 
@@ -120,9 +119,13 @@ function App() {
                   <button>Save</button>
                 </form>
               )}
-              <button onClick={()=>{
-                handleDeleteSubmit(todo.id)
-              }}>Delete</button>
+              <button
+                onClick={() => {
+                  handleDeleteSubmit(todo.id)
+                }}
+              >
+                Delete
+              </button>
             </div>
           ))}
       </section>

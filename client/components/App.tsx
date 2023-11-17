@@ -107,9 +107,10 @@ function App() {
           todos.map((todo: ToDoData, index) => (
             <div key={index}>
               <li key={index}>{todo.description}</li>
-              <button onClick={(e) => handleEdit(e)}>Edit</button>
+              <button onClick={() => handleEdit(index)}>Edit</button>
+              {/* open the form */}
               {showForm === index && (
-                <form onSubmit={(e) => handleEditSubmit(e, index)}>
+                <form onSubmit={(e) => handleEditSubmit(e, todo.id)}>
                   <input
                     type="text"
                     name="description"

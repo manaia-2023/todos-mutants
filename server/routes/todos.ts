@@ -6,7 +6,7 @@ import { ToDoData } from '../../models/todoData'
 router.get('/', async (req, res) => {
   try {
     const todos = await getTodos()
-    console.log(todos)
+    // console.log(todos)
 
     res.json(todos)
     res.status(200)
@@ -40,6 +40,8 @@ router.patch('/:id', async (req, res) => {
 })
 
 router.delete('/:id', async (req, res) => {
+  console.log(req.params.id);
+  
   try {
     const id = Number(req.params.id)
     const todos = await deleteTodos(id)

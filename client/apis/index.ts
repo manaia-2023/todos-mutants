@@ -3,7 +3,7 @@ import { Todo } from '../../server/models/db.ts'
 import { ToDoData } from '../../models/todoData'
 // const SSURL = 'http://localhost:3000'
 
-// THIS ENDPOINT WILL CHANGE ONCE TAYNE AND BONNIE FINISH SERVERSIDE ROUTING
+// THIS ENDPOINT WILL CHANGE ONCE TAYNE AND BONNIE FINISH SERVERSIDE ROUTING -DONE-!
 export async function getTodos(): Promise<Todo[]> {
   // const data = await request.get(SSURL + '/api/v1/todos')
   const data = await request.get('/api/v1/todos')
@@ -18,31 +18,30 @@ export async function addTodos(newTodo: ToDoData) {
   console.log(response.body.description)
   return response.body.description
 }
- 
-interface EditDescription{
+
+interface EditDescription {
   id: Todo['id']
   newDescription: Todo['description']
- }
+}
 
 export async function editTodos({
   id,
   newDescription,
-}: EditDescription): Promise<void>{
-  console.log(id, newDescription);
-  
- await request.patch(`/api/v1/todos/${id}`).send({description: newDescription})
+}: EditDescription): Promise<void> {
+  console.log(id, newDescription)
+
+  await request
+    .patch(`/api/v1/todos/${id}`)
+    .send({ description: newDescription })
 }
 
-interface DeleteTodo{
+interface DeleteTodo {
   id: Todo['id']
 }
 
-export async function deleteTodo(id: string){
-  console.log(id);
-  
+export async function deleteTodo(id: string) {
+  console.log(id)
+
   await request.delete(`/api/v1/todos/${id}`)
-  console.log({id});
-  
+  console.log({ id })
 }
-
-

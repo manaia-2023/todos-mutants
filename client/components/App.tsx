@@ -65,6 +65,7 @@ function App() {
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     addTodoMutation.mutate(form)
+    setForm(initialForm)
   }
 
   function handleEditSubmit(event, id: number) {
@@ -75,7 +76,9 @@ function App() {
     }
     eidtToDoMutation.mutate(data)
     setShowForm(-1)
+    setForm(initialForm)
   }
+
   function handleDeleteSubmit(id: string) {
     // event.preventDefault()
     // console.log(id);
